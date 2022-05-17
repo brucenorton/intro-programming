@@ -1,0 +1,41 @@
+/* css/programming.css */
+/* mini reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    min-height: 100vh;
+    background-color: rgb(32 32 32 /1);
+    color: rgb(240 240 240 / 0.95);
+    font-size: 24px;
+    line-height: 2em;
+  }
+  /* end mini reset */
+  
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Playfair Display", serif;
+  }
+  p,
+  ul {
+    font-family: "DM Sans", sans-serif;
+  }
+  ul {
+    padding-left: 1.44rem;
+  }
+  
+  figure img {
+    width: 100%;
+  }
+
+  #tasks img{
+      max-width: 40px;
+      transform: translateY(13px);
+  }
