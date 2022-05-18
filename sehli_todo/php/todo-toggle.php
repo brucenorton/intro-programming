@@ -4,16 +4,16 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once("db_connect.php");
-$setCompleted = 1;
+    $resultArray=[];
 if($db_connect) {
-
+$taskID = $_REQUEST['ID'];
      $sql = "SELECT `todo`.ID, `todo`.task, `todo`.completed
       FROM `todo` 
       WHERE `todo`.ID = ?";
-    $resultArray=[];
+
 
     if($statement = $db_connect->prepare($sql)){
-        $statement->bind_param('i', $_REQUEST['ID']);
+        $statement->bind_param('i', $taskID);
         $statement->execute();
         $statement->store_result();
         $statement->bind_result($resID,$resTask,$resCompleted);
@@ -25,29 +25,32 @@ if($db_connect) {
                 "completed"=>$resCompleted,
              ];
         }
-        echo json_encode($resultArray);
-        markCompleted($resCompleted);
+        //echo json_encode($resultArray);
+        markCompleted($resultArray[0]["completed"]);
         $statement->close();
     }else{
         $resultArray[] = [
             "error"=>"error",
          ];
-        echo json_encode($resultArray);
+        //echo json_encode($resultArray);
     }
 }
 
 function markCompleted($setCompleted){
-    
+  $taskID = $_REQUEST['ID'];
+    if($setCompleted == 0){
+      $setCompleted = 1;
+    }else{
+      $setCompleted = 0;
+    }
     require("db_connect.php");
     if($db_connect) {
-        $sql = "UPDATE `todo` SET `completed` = (?) WHERE `todo`.`ID` = (?)";
-      
+        $sql = "UPDATE `todo` SET `completed` = $setCompleted WHERE `todo`.`ID` = (?)";
           $insertedRows= 0;
       
           if($statement= $db_connect->prepare($sql)){
-              echo($_REQUEST['ID']);
-              $statement->bind_param('i', $_REQUEST['ID']);
 
+              $statement->bind_param('i', $taskID);
               $statement->execute();
               $insertedRows += $statement->affected_rows;
       
@@ -63,6 +66,7 @@ function markCompleted($setCompleted){
                   $resultArray[] = [
                     "insertedRows"=>$insertedRows,
                     "setCompleted"=>$setCompleted,
+                    "taskID"=>$taskID,
                   ];
       
               }
